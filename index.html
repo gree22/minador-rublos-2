@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minador de Rublos</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #0f0;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border: none;
+      border-radius: 8px;
+      background: #0f0;
+      color: #000;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #0c0;
+    }
+    .level {
+      font-size: 1.4em;
+      margin: 10px 0;
+    }
+    .points {
+      font-size: 2em;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💰 Minador de Rublos</h1>
+    <div class="level">Nivel: <span id="level">1</span></div>
+    <div class="points">Rublos: <span id="points">0</span></div>
+    <button onclick="mine()">🛠️ Minar</button>
+  </div>
+
+  <script>
+    let points = parseInt(localStorage.getItem('points')) || 0;
+    let level = parseInt(localStorage.getItem('level')) || 1;
+
+    const pointsDisplay = document.getElementById('points');
+    const levelDisplay = document.getElementById('level');
+
+    function mine() {
+      points += level;
+      if (points >= level * 50) {
+        level++;
+        alert('🎉 ¡Has subido al nivel ' + level + '!');
+      }
+      updateDisplay();
+      saveProgress();
+    }
+
+    function updateDisplay() {
+      pointsDisplay.textContent = points;
+      levelDisplay.textContent = level;
+    }
+
+    function saveProgress() {
+      localStorage.setItem('points', points);
+      localStorage.setItem('level', level);
+    }
+
+    updateDisplay();
+  </script>
+</body>
+</html>
