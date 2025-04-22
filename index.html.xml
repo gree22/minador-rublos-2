@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minador de Rublos</title>
+    <style>
+        body {
+            background: #121212;
+            color: #eee;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .saldo, .nivel, .potencia {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+        .btn-minar {
+            padding: 15px 30px;
+            background: #ffcc00;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.4em;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .btn-minar:active {
+            transform: scale(0.95);
+        }
+        .barra-progreso {
+            width: 80%;
+            margin: 20px auto;
+            height: 20px;
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progreso {
+            height: 100%;
+            background: #4caf50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>⚒️ Minador de Rublos ⚒️</h1>
+
+    <div class="saldo">Rublos: <span id="rublos">0</span></div>
+    <div class="nivel">Nivel: <span id="nivel">1</span></div>
+    <div class="potencia">Potencia: <span id="potencia">1</span></div>
+
+    <button class="btn-minar" onclick="minar()">💎 Minar</button>
+
+    <div class="barra-progreso">
+        <div id="progreso" class="progreso"></div>
+    </div>
+
+    <!-- Espacio para anuncios -->
+    <div id="banner-ad">
+        <!-- Aquí irá tu script de Monetag, Adsterra, Exoclick -->
+    </div>
+
+    <script>
+        let rublos = 0;
+        let nivel = 1;
+        let potencia = 1;
+        let umbralNivel = 100;
+
+        // Si viene desde Telegram, capturar ID y Payeer
+        const params = new URLSearchParams(window.location.search);
+        const user_id = params.get('user_id');
+        const payeer_id = params.get('payeer');
+
+        function minar() {
+            rublos += potencia;
+            document.getElementById('rublos').innerText = rublos;
+            actualizarProgreso();
+            checkNivel();
+        }
+
+        function actualizarProgreso() {
+            let progreso = Math.min((rublos / umbralNivel) * 100, 100);
+            document.getElementById('progreso').style.width = progreso + '%';
+        }
+
+        function checkNivel() {
+            if (rublos >= umbralNivel) {
+                nivel++;
+                rublos = 0;
+                potencia++;
+                umbralNivel = Math.floor(umbralNivel * 1.5);
+                document.getElementById('nivel').innerText = nivel;
+                document.getElementById('potencia').innerText = potencia;
+                document.getElementById('rublos').innerText = rublos;
+                actualizarProgreso();
+                alert('¡Nivel ' + nivel + ' alcanzado! 🎉 Potencia aumentada.');
+            }
+        }
+
+        // Guardar progreso
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('rublos', rublos);
+            localStorage.setItem('nivel', nivel);
+            localStorage.setItem('potencia', potencia);
+        });
+
+        // Cargar progreso
+        window.onload = () => {
+            if(localStorage.getItem('rublos')){
+                rublos = parseInt(localStorage.getItem('rublos'));
+                nivel = parseInt(localStorage.getItem('nivel'));
+                potencia = parseInt(localStorage.getItem('potencia'));
+                document.getElementById('rublos').innerText = rublos;
+                document.getElementById('nivel').innerText = nivel;
+                document.getElementById('potencia').innerText = potencia;
+                actualizarProgreso();
+            }
+        }
+    </script>
+</body>
+</html>
